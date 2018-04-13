@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class CycString {
     public static void main(String[] args){
-        System.out.println(longestPalindrome("aaa"));
+        System.out.println(longestPalindrome2("aaa"));
     }
 
     public static String longestPalindrome(String s) {
@@ -71,5 +71,34 @@ public class CycString {
 
         return sbList.get(0).toString();
     }
+
+    public static String longestPalindrome2(String s){
+        if(s.length()<=1){
+            return s;
+        }
+        int[] range=new int[]{0,1};
+        char[] c=s.toCharArray();
+        for(int i=0;i<c.length;i++){
+            i=helper(c,i,range);
+        }
+        return s.substring(range[0],range[1]);
+    }
+
+    public static int helper(char[] c,int index,int[] range){
+        int low=index,hi=index;
+        while(hi<c.length-1&&c[hi]==c[hi+1])hi++;
+        int reset=hi;
+        while(low-1>=0&&hi+1<c.length&&c[hi+1]==c[low-1]){
+            hi++;
+            low--;
+        }
+        if(hi-low+1>range[1]-range[0]){
+            range[0]=low;
+            range[1]=hi+1;
+        }
+        return reset;
+    }
+
+
 }
 
