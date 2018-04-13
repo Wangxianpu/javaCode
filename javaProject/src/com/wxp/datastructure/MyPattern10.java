@@ -9,8 +9,69 @@ import java.util.Arrays;
 public class MyPattern10 {
     public static void main(String[] args){
         MyPattern10 test = new MyPattern10();
-        System.out.print(test.isMatch("aaa","..a"));
+        System.out.println(test.isMatch2("aaa", ".a"));
     }
+
+
+    public boolean isMatch2(String s, String p) {
+
+        if (s == null || p == null) {
+            return false;
+        }
+        boolean[][] dp = new boolean[s.length()+1][p.length()+1];
+        dp[0][0] = true;
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) == '*' && dp[0][i-1]) {
+                dp[0][i+1] = true;
+            }
+        }
+        for (int i = 0 ; i < s.length(); i++) {
+            for (int j = 0; j < p.length(); j++) {
+                if (p.charAt(j) == '.') {
+                    dp[i+1][j+1] = dp[i][j];
+                }
+                if (p.charAt(j) == s.charAt(i)) {
+                    dp[i+1][j+1] = dp[i][j];
+                }
+                if (p.charAt(j) == '*') {
+                    if (p.charAt(j-1) != s.charAt(i) && p.charAt(j-1) != '.') {
+                        dp[i+1][j+1] = dp[i+1][j-1];
+                    } else {
+                        dp[i+1][j+1] = (dp[i+1][j] || dp[i][j+1] || dp[i+1][j-1]);
+                    }
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
+
+
+    public boolean isMatch3(String s, String p) {
+        boolean[] match = new boolean[s.length() + 1];
+        match[s.length()] = true;
+        for(int i = p.length() - 1; i >=0; i--){
+            if(p.charAt(i) == '*'){
+                //如果是星号，从后往前匹配
+                for(int j = s.length() - 1; j >= 0; j--){
+                    match[j] = match[j] || (match[j + 1] && (p.charAt(i - 1) == '.'
+                            || (p.charAt(i - 1) == s.charAt(j))));
+                }
+                //记得把i多减1，因为星号是和其前面的字符匹配使用
+                i--;
+
+            }else{
+                //如果不是星号，从前往后匹配
+                for(int j = 0; j < s.length(); j++){
+                    match[j] = match[j + 1] && (p.charAt(i) == '.' || (p.charAt(i) == s.charAt(j)));
+                }
+                //只要试过了pattern中最后一个字符，就要把match【s。length（）】置为false
+                match[s.length()] = false;
+            }
+        }
+        return match[0];
+    }
+
+
 
     //pChar不一定是满的，所以要将最后的\u0000给过滤掉
     public boolean isMatch(String s, String p) {
