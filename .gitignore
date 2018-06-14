@@ -76,3 +76,4 @@ local.properties
 
 /target/
 *.iml
+/out/
