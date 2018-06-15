@@ -23,7 +23,6 @@ public class ThreeSum {
         }
     }
 
-
     public  List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
         //将数据排序之后再进行操作  这个时候需要加入一个排重的机制，来确保后面输出的结果中不存在重复项 同时记录0出现的次数
@@ -180,4 +179,47 @@ public class ThreeSum {
         temp.add(num3);
         result.add(temp);
     }
+
+
+    /**
+     *  三数之和 优化  将三数之和转化为2数之和 一点不懂，数组剩下的部门首尾相动  如此四数之和 5数之和等等都可以这么处理
+     */
+    List<List<Integer>> ret = new ArrayList<List<Integer>>();
+
+    public List<List<Integer>> threeSum1(int[] nums) {
+        Arrays.sort(nums);
+        for(int i = 0; i < nums.length - 2; ++i){
+            twoSum(nums, i+1, 0 - nums[i]);
+            while(i < nums.length - 2 && nums[i] == nums[i+1])
+                ++i;
+        }
+        return ret;
+    }
+
+    public void twoSum(int[] nums, int start, int value)
+    {
+        int beg = start;
+        int end = nums.length - 1;
+        while(beg < end){
+            if(nums[beg] + nums[end] == value){
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(nums[start - 1]);
+                list.add(nums[beg]);
+                list.add(nums[end]);
+                ret.add(list);
+                while(beg < end && nums[beg+1] == nums[beg])
+                    beg++;
+                while(beg < end && nums[end-1] == nums[end])
+                    end--;
+                beg++;
+                end--;
+
+            }else if(nums[beg] + nums[end] > value){
+                end--;
+            }else{
+                beg++;
+            }
+        }
+    }
+
 }
